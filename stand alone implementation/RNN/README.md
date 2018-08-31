@@ -4,5 +4,5 @@ This repository implements a simple recurrent neural network (RNN) to do the cla
 ## Performance
 ![RNN Performance](/Figures/rnn.png)
 ![LSTM Performance](/Figures/lstm.png)
-![FC Performance](/Figures/fc.png)
+![FC Performance](../Figures/fc.png)
 
