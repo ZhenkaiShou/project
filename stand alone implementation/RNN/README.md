@@ -14,5 +14,4 @@ Performance of a Fully Connected Network (for comparison)
 ![FC Performance](/stand%20alone%20implementation/RNN/Figures/fc.png "FC")
 
 ## Further Reading
-- LSTM tutorial
-[Understanding LSTM Networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+- [Understanding LSTM Networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
