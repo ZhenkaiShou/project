@@ -1,7 +1,7 @@
 import tensorflow as tf
 from config import * 
 
-class model(object):
+class RNN_Model(object):
   def rnn(self):
     # Basic Recurrent Neural Network implementation.
     
