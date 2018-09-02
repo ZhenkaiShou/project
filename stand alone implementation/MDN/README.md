@@ -5,11 +5,10 @@ This repository implements a simple mixture density network (MDN) to predict a 2
 The training dataset is a 2D distribution: x = 7 \* *sin*(0.75 \* *y*) + 0.5 \* *y* + *N*(0, 1)\
 ![Training Dataset](/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/training_data.png "Training Dataset")
 ## Performance
-'Comparison between the MDN (left) and a fully connected network (FC) (right)'\
+`Comparison between the MDN (left) and a fully connected network (FC) (right)`\
 <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_5.png" alt="MDN" width="45%"/>
-<img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/fc.png" alt="FC" width="45%"/>
-
-'Influence of the number of modes'\
+<img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/fc.png" alt="FC" width="45%"/>\
+`Influence of the number of modes`\
 <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_1.png" alt="MDN" width="45%"/>
 <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_3.png" alt="MDN" width="45%"/>\
 <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_5.png" alt="MDN" width="45%"/>
