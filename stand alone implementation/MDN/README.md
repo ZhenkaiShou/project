@@ -2,8 +2,8 @@
 ## Basics
 This repository implements a simple mixture density network (MDN) to predict a 2D distribution. Given an input value *x*, MDN returns the distribution (probability of a mode *π*, mean *μ*, standard deviation *σ*) of the output value *y*:<br />
 <p float="center">
-  `*π, μ, σ = f(x) *`
-</p>
+  *π, μ, σ = f(x) *
+</p><br />
 The output value *y* is then sampled from the distribution (*π, μ, σ*) with temperature *τ*.
 ## Training Dataset
 The training dataset is a 2D distribution: x = 7 \* *sin*(0.75 \* *y*) + 0.5 \* *y* + *N*(0, 1)<br />
