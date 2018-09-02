@@ -9,7 +9,8 @@ The training dataset is a 2D distribution: x = 7 \* *sin*(0.75 \* *y*) + 0.5 \* 
 <p float="center">
   <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_5.png" alt="MDN" width="35%"/>
   <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/fc.png" alt="FC" width="35%"/>
-</p><br />
+</p>
+
 ### Influence of the number of modes:
 <p float="center">
   <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_1.png" alt="MDN" width="45%"/>
@@ -17,6 +18,7 @@ The training dataset is a 2D distribution: x = 7 \* *sin*(0.75 \* *y*) + 0.5 \* 
   <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_5.png" alt="MDN" width="45%"/>
   <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_7.png" alt="MDN" width="45%"/>
 </p>
+
 ### Influence of temperature:
 ![Temperature](/stand%20alone%20implementation/MDN/Figures/Temperature%20Comparison/mdn_5.gif "Temperature")
 
