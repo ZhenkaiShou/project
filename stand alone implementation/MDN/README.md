@@ -1,1 +1,13 @@
+# Simple Implementation of Mixture Density Network
+## Basics
+This repository implements a simple mixture density network (MDN) to predict a 2D distribution. Given an input value *x*, MDN outputs the distribution (probability of a mode *π*, mean *μ*, standard deviation *σ*) of output value *y*.
+## Training Dataset
+The training dataset is a 2D distribution: x = 7 \* *sin*(0.75 \* *y*) + 0.5 \* *y* + *N*(0, 1)
+![Training Dataset](/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/training_data.png "Training Dataset")
+## Performance
+Comparison between the MDN and a single-hidden-layer neural network
+![Single-hidden-layer Neural Network](/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/fc.png "Single-hidden-layer Neural Network") {:height="50%" width="50%"}
 
+
+## Further Reading
+- [Mixture Density Networks with PyTorch](https://github.com/hardmaru/pytorch_notebooks/blob/master/mixture_density_networks.ipynb)
