@@ -6,10 +6,10 @@ The training dataset is a 2D distribution: x = 7 \* *sin*(0.75 \* *y*) + 0.5 \* 
 ![Training Dataset](/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/training_data.png "Training Dataset")
 ## Performance
 ### Comparison between the MDN (left) and a fully connected network (FC) (right):<br/>
-
-<img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_5.png" alt="MDN" width="35%"/>
-<img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/fc.png" alt="FC" width="35%"/><br/>
-
+<p float="center">
+  <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_5.png" alt="MDN" width="35%"/>
+  <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/fc.png" alt="FC" width="35%"/>
+<\p>
 ### Influence of the number of modes:
 <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_1.png" alt="MDN" width="45%"/>
 <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_3.png" alt="MDN" width="45%"/>\
