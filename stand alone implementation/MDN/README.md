@@ -1,8 +1,8 @@
 # Simple Implementation of Mixture Density Network
 ## Basics
 This repository implements a simple mixture density network (MDN) to predict a 2D distribution. Given an input value *x*, MDN returns the distribution (probability of a mode *π*, mean *μ*, standard deviation *σ*) of the output value *y*:<br />
-<p float="center">
-  *π, μ, σ = f(x)*
+<p align="center">
+  <i>π, μ, σ = f(x)</i>
 </p>
 
 The output value *y* is then sampled from the distribution (*π, μ, σ*) with temperature *τ*.
