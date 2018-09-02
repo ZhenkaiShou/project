@@ -235,6 +235,7 @@ def temperature_comparison(file_name, list_temperature):
     # Create gif for all each temperature in the list.
     imageio.mimsave(FIGURE_DIR + "Temperature Comparison/" + file_name + ".gif", 
     [plot_for_temperature(temperature, logits, mu, sigma, training_x, training_y, test_x) for temperature in list_temperature], fps = 1)
+  tf.contrib.keras.backend.clear_session()
 
 def plot_for_temperature(temperature, logits, mu, sigma, training_x, training_y, test_x):
   # Plot training and test samples for a single temperature.
@@ -274,5 +275,7 @@ training(type = "fc", file_name = "fc")
 
 # file_name of function temperature_comparison(file_name, list_temperature)
 # determines which file from "Saves" folder will be used to restore the network variables.
-# temperature_comparison only works for MDNs.
+# Temperature influences how the output will be sampled from a set of gaussian distributions.
+# High temperature value: outputs are more scattered
+# Low temperature value: outputs are more concentrated
 temperature_comparison(file_name = "mdn_" + str(MODES), list_temperature = [0.1, 0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 3.0, 4.0, 5.0])
