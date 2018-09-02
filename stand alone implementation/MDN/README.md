@@ -6,7 +6,7 @@ The training dataset is a 2D distribution: x = 7 \* *sin*(0.75 \* *y*) + 0.5 \* 
 ![Training Dataset](/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/training_data.png "Training Dataset")
 ## Performance
 Comparison between the MDN and a fully connected network (FC)
-<img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/fc.png" alt="FC" width="10%"/> <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_5.png" alt="MDN" width="10%"/>
+<img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/fc.png" alt="FC" width="40%"/> <img src="/stand%20alone%20implementation/MDN/Figures/Training%20and%20Test%20Samples/mdn_5.png" alt="MDN" width="40%"/>
 
 ## Further Reading
 - [Mixture Density Networks with PyTorch](https://github.com/hardmaru/pytorch_notebooks/blob/master/mixture_density_networks.ipynb)
