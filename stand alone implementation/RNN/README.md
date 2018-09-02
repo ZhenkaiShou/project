@@ -4,12 +4,15 @@ This repository implements a simple recurrent neural network (RNN) to do the cla
 ## Performance
 The training and validation accuracy is recorded for each of the following three networks. 
 1. RNN
+
 Performance of a Recurrent Neural Network
 ![RNN Performance](/stand%20alone%20implementation/RNN/Figures/rnn.png "RNN")
 2. LSTM
+
 Performance of a Long Short-Term Memory Network
 ![LSTM Performance](/stand%20alone%20implementation/RNN/Figures/lstm.png "LSTM")
 3. FC
+
 Performance of a Fully Connected Network (for comparison)
 ![FC Performance](/stand%20alone%20implementation/RNN/Figures/fc.png "FC")
 
