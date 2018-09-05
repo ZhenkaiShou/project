@@ -25,20 +25,20 @@ def training(type, file_name):
   
   # Load data.
   mnist = tf.keras.datasets.mnist
-  (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+  (training_images, training_labels), (test_images, test_labels) = mnist.load_data()
   
   # Normalize and reshape training images.
-  train_images = train_images / 255.0
-  train_images = train_images.reshape(-1, 28, 28)
+  training_images = training_images / 255.0
+  training_images = training_images.reshape(-1, 28, 28)
   # Convert label (range from 0 to 9) to one hot vector.
-  train_labels = np.eye(10)[train_labels]
-  train_length = np.shape(train_images)[0]
+  training_labels = np.eye(N_CLASS)[training_labels]
+  training_length = np.shape(training_images)[0]
   
   # Normalize and reshape test images.
   test_images = test_images / 255.0
   test_images = test_images.reshape(-1, 28, 28)
   # Convert label (range from 0 to 9) to one hot vector.
-  test_labels = np.eye(10)[test_labels]
+  test_labels = np.eye(N_CLASS)[test_labels]
   test_length = np.shape(test_images)[0]
   
   # Invoke the corresponding model.
@@ -66,6 +66,12 @@ def training(type, file_name):
     list_test_accuracy = []
     
     for epoch in range(EPOCH):
+      # Shuffle the training data.
+      random_index = np.array(range(training_length))
+      np.random.shuffle(random_index)
+      random_training_images = training_images[random_index]
+      random_training_labels = training_labels[random_index]
+      
       # Determine learning rate based on the training steps.
       if epoch < ANNEALING_STEP[0]:
         lr = LEARNING_RATE[0]
@@ -77,17 +83,17 @@ def training(type, file_name):
       test_accuracy = 0
       
       # Training.
-      for i in range(np.ceil(train_length / BATCH_SIZE).astype(int)):
-        images = train_images[i*BATCH_SIZE:np.minimum((i+1)*BATCH_SIZE, train_length)]
-        labels = train_labels[i*BATCH_SIZE:np.minimum((i+1)*BATCH_SIZE, train_length)]
+      for i in range(np.ceil(training_length / BATCH_SIZE).astype(int)):
+        images = random_training_images[i*BATCH_SIZE:np.minimum((i+1)*BATCH_SIZE, training_length)]
+        labels = random_training_labels[i*BATCH_SIZE:np.minimum((i+1)*BATCH_SIZE, training_length)]
         [_, total_loss, y] = sess.run([model.train_op, model.total_loss, model.y], feed_dict = {model.Inputs: images, model.Labels: labels, model.LR: lr})
         
-        average_loss += total_loss
+        average_loss += total_loss * np.shape(images)[0]
         comparison = np.equal(np.argmax(y, 1), np.argmax(labels, 1))
         correct = np.sum(comparison)
         training_accuracy += correct
       
-      # Test.
+      # Validation.
       for i in range(np.ceil(test_length / BATCH_SIZE).astype(int)):
         images = test_images[i*BATCH_SIZE:np.minimum((i+1)*BATCH_SIZE, test_length)]
         labels = test_labels[i*BATCH_SIZE:np.minimum((i+1)*BATCH_SIZE, test_length)]
@@ -97,23 +103,23 @@ def training(type, file_name):
         correct = np.sum(comparison)
         test_accuracy += correct
       
-      average_loss /= np.ceil(train_length / BATCH_SIZE)
-      training_accuracy /= train_length
+      average_loss /= training_length
+      training_accuracy /= training_length
       test_accuracy /= test_length
       
       list_average_loss.append(average_loss)
       list_training_accuracy.append(training_accuracy)
       list_test_accuracy.append(test_accuracy)
       
+      print("Epoch ", format(epoch, "03d"), ": average loss = ", format(average_loss, ".8f"), ", training accuracy = ", format(training_accuracy, ".2%"), ", test accuracy = ", format(test_accuracy, ".2%"), sep = '')
+      
       # Tensorboard.
-      summary=tf.Summary()
+      summary = tf.Summary()
       summary.value.add(tag = "Average Loss", simple_value = average_loss)
       summary.value.add(tag = "Training Accuracy", simple_value = training_accuracy)
       summary.value.add(tag = "Test Accuracy", simple_value = test_accuracy)
       summary_writer.add_summary(summary, epoch)
       summary_writer.flush()
-      
-      print("Epoch ", format(epoch, "03d"), ": average_loss = ", format(average_loss, ".8f"), ", training accuracy = ", format(training_accuracy, ".2%"), ", test accuracy = ", format(test_accuracy, ".2%"), sep = '')
     
     # Save the parameters.
     saver = tf.train.Saver()
@@ -128,29 +134,37 @@ def training(type, file_name):
         content = {"Epoch": epoch, "Average Loss": list_average_loss[epoch], "Training Accuracy": list_training_accuracy[epoch], "Test Accuracy": list_test_accuracy[epoch]}
         writer.writerow(content)
     
-    # Create figure.
+    # Plot the average loss and accuracy.
     list_epoch = list(range(EPOCH))
-    f, axes = plt.subplots(nrows=1, ncols=3, figsize = (15, 5))
+    f, ax = plt.subplots(nrows = 1, ncols = 2, figsize = (10, 5))
     
-    axes[0].plot(list_epoch, list_average_loss)
-    axes[0].set_title("Average Loss")
+    ax[0].plot(list_epoch, list_average_loss)
+    ax[0].set_title("Average Loss")
+    ax[0].set_xlabel("Epoch")
+    ax[0].set_ylabel("Loss")
+    ax[0].grid()
     
-    axes[1].plot(list_epoch, list_training_accuracy)
-    axes[1].set_title("Training Accuracy")
-    axes[1].set_ylim([0.6, 1.0])
+    ax[1].plot(list_epoch, list_training_accuracy, "r-", label = "training")
+    ax[1].plot(list_epoch, list_test_accuracy, "b-", label = "test")
+    ax[1].set_title("Average Accuracy")
+    ax[1].set_xlabel("Epoch")
+    ax[1].set_ylabel("Accuracy")
+    ax[1].set_ylim([0.6, 1.0])
+    ax[1].legend(loc = "lower right")
+    ax[1].grid()
     
-    axes[2].plot(list_epoch, list_test_accuracy)
-    axes[2].set_title("Test Accuracy")
-    axes[2].set_ylim([0.6, 1.0])
-
+    f.tight_layout()
     f.savefig(FIGURE_DIR + file_name + ".png")
     plt.close(f)
   tf.contrib.keras.backend.clear_session()
 
-# Available parameters for type of function training(type, file_name)
-# rnn: A basic recurrent neural network
-# lstm: A Long Short-Term Memory Network
-# fc: A network with a single hidden layer
+# Function training(type, file_name):
+#
+# Available parameters for type:
+# - "rnn": A basic recurrent neural network
+# - "lstm": A Long Short-Term Memory Network
+# - "fc": A network with a single hidden layer
+# file_name determines the name of all saved files.
 training(type = "rnn", file_name = "rnn")
 training(type = "lstm", file_name = "lstm")
 training(type = "fc", file_name = "fc")

@@ -11,15 +11,15 @@ class RNN_Model(object):
     # Dense, kernel: 128*10 
     # Total: 21376
     self.Inputs = tf.placeholder(tf.float32, (None, TIME_LENGTH, INPUT_LENGTH))
-    self.Labels = tf.placeholder(tf.float32, (None, 10))
+    self.Labels = tf.placeholder(tf.float32, (None, N_CLASS))
     self.LR = tf.placeholder(tf.float32, ())
     
-    cell = tf.contrib.rnn.BasicRNNCell(FEATURE_NUM)
+    cell = tf.contrib.rnn.BasicRNNCell(HIDDEN_UNITS)
     initial_state = cell.zero_state(tf.shape(self.Inputs)[0], tf.float32)
     # outputs = a stack of hidden units for all time sequences.
     # state = the hidden units for the last sequence.
     self.outputs, self.state = tf.nn.dynamic_rnn(cell, self.Inputs, tf.tile([TIME_LENGTH], [tf.shape(self.Inputs)[0]]), initial_state)
-    self.logits = tf.layers.dense(self.state, 10, use_bias = False)
+    self.logits = tf.layers.dense(self.state, N_CLASS, use_bias = False)
     self.y = tf.nn.softmax(self.logits)
     
     self.loss = tf.losses.softmax_cross_entropy(self.Labels, self.logits)
@@ -42,15 +42,15 @@ class RNN_Model(object):
     # Dense, kernel: 128*10 
     # Total: 81664
     self.Inputs = tf.placeholder(tf.float32, (None, TIME_LENGTH, INPUT_LENGTH))
-    self.Labels = tf.placeholder(tf.float32, (None, 10))
+    self.Labels = tf.placeholder(tf.float32, (None, N_CLASS))
     self.LR = tf.placeholder(tf.float32, ())
     
-    cell = tf.contrib.rnn.BasicLSTMCell(FEATURE_NUM)
+    cell = tf.contrib.rnn.BasicLSTMCell(HIDDEN_UNITS)
     initial_state = cell.zero_state(tf.shape(self.Inputs)[0], tf.float32)
     # outputs = a stack of hidden units for all time sequences.
     # state = a tuple of the memory cell and hidden units for the last sequence.
     self.outputs, self.state = tf.nn.dynamic_rnn(cell, self.Inputs, tf.tile([TIME_LENGTH], [tf.shape(self.Inputs)[0]]), initial_state)
-    self.logits = tf.layers.dense(self.state[1], 10, use_bias = False)
+    self.logits = tf.layers.dense(self.state[1], N_CLASS, use_bias = False)
     self.y = tf.nn.softmax(self.logits)
     
     self.loss = tf.losses.softmax_cross_entropy(self.Labels, self.logits)
@@ -73,12 +73,12 @@ class RNN_Model(object):
     # Dense, kernel: 128*10
     # Total: 101760
     self.Inputs = tf.placeholder(tf.float32, (None, TIME_LENGTH, INPUT_LENGTH))
-    self.Labels = tf.placeholder(tf.float32, (None, 10))
+    self.Labels = tf.placeholder(tf.float32, (None, N_CLASS))
     self.LR = tf.placeholder(tf.float32, ())
     
     self.inputs = tf.reshape(self.Inputs, (-1, TIME_LENGTH * INPUT_LENGTH))
-    self.z = tf.layers.dense(self.inputs, FEATURE_NUM, activation = tf.nn.relu, use_bias = True)
-    self.logits = tf.layers.dense(self.z, 10, use_bias = False)
+    self.z = tf.layers.dense(self.inputs, HIDDEN_UNITS, activation = tf.nn.relu, use_bias = True)
+    self.logits = tf.layers.dense(self.z, N_CLASS, use_bias = False)
     self.y = tf.nn.softmax(self.logits)
     
     self.loss = tf.losses.softmax_cross_entropy(self.Labels, self.logits)
