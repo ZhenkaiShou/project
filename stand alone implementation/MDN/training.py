@@ -27,6 +27,7 @@ def plot_training_data(file_name):
   ax.plot(training_x, training_y, "b.", label = "Training")
   ax.set_ylim(-11, 11)
   ax.legend(loc = "lower right")
+  ax.grid()
   
   f.savefig(FIGURE_DIR + "Training and Test Samples/" + file_name + ".png")
   plt.close(f)
@@ -81,7 +82,7 @@ def mdn(file_name):
       [_, average_loss] = sess.run([model.train_op, model.total_loss], feed_dict = {model.X: training_x, model.Y: training_y, model.LR: lr})
       list_average_loss.append(average_loss)
       if epoch % 500 == 0 or epoch == EPOCH - 1:
-        print("Epoch ",  epoch, ": average loss = ", average_loss, sep = '')
+        print("Epoch ",  format(epoch, "04d"), ": average loss = ", format(average_loss, ".8f"), sep = '')
     
     # Save the parameters.
     saver = tf.train.Saver()
@@ -96,14 +97,15 @@ def mdn(file_name):
         content = {"Epoch": epoch, "Average Loss": list_average_loss[epoch]}
         writer.writerow(content)
     
-    # Create figure.
+    # Plot the average loss.
     list_epoch = list(range(EPOCH))
     
     f, ax = plt.subplots(nrows=1, ncols=1, figsize = (5, 5))
     ax.plot(list_epoch, list_average_loss)
-    ax.set_title("Modes = " + str(MODES))
+    ax.set_title("Average Loss for Modes = " + str(MODES))
     ax.set_xlabel("Epoch")
-    ax.set_ylabel("Average Loss")
+    ax.set_ylabel("Loss")
+    ax.grid()
     
     f.savefig(FIGURE_DIR + "Average Loss/" + file_name + ".png")
     plt.close(f)
@@ -121,12 +123,13 @@ def mdn(file_name):
     sample_y = chosen_mu + chosen_sigma * np.random.randn(TEST_SAMPLES, 1) * np.sqrt(TEMPERATURE)
     
     # Plot the training data and test data.
-    f, ax = plt.subplots(nrows=1, ncols=1, figsize = (5, 5))
+    f, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (5, 5))
     ax.plot(training_x, training_y, "b.", label = "Training")
     ax.plot(test_x, sample_y, "r.", label = "Test")
     ax.set_ylim(-11, 11)
     ax.set_title("Modes = " + str(MODES) + ", Temperature = " + str(TEMPERATURE))
     ax.legend(loc = "lower right")
+    ax.grid()
     
     f.savefig(FIGURE_DIR + "Training and Test Samples/" + file_name + ".png")
     plt.close(f)
@@ -175,14 +178,15 @@ def fc(file_name):
         content = {"Epoch": epoch, "Average Loss": list_average_loss[epoch]}
         writer.writerow(content)
     
-    # Create figure.
+    # Plot the average loss.
     list_epoch = list(range(EPOCH))
     
-    f, ax = plt.subplots(nrows=1, ncols=1, figsize = (5, 5))
+    f, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (5, 5))
     ax.plot(list_epoch, list_average_loss)
     ax.set_title("Average Loss")
     ax.set_xlabel("Epoch")
-    ax.set_ylabel("Average Loss")
+    ax.set_ylabel("Loss")
+    ax.grid()
     
     f.savefig(FIGURE_DIR + "Average Loss/" + file_name + ".png")
     plt.close(f)
@@ -191,11 +195,12 @@ def fc(file_name):
     predicted_y = sess.run(model.y, feed_dict = {model.X: test_x})
     
     # Plot the training data and test data.
-    f, ax = plt.subplots(nrows=1, ncols=1, figsize = (5, 5))
+    f, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (5, 5))
     ax.plot(training_x, training_y, "b.", label = "Training")
     ax.plot(test_x, predicted_y, "r.", label = "Test")
     ax.set_ylim(-11, 11)
     ax.legend(loc = "lower right")
+    ax.grid()
     
     f.savefig(FIGURE_DIR + "Training and Test Samples/" + file_name + ".png")
     plt.close(f)
@@ -250,32 +255,37 @@ def plot_for_temperature(temperature, logits, mu, sigma, training_x, training_y,
   sample_y = chosen_mu + chosen_sigma * np.random.randn(TEST_SAMPLES, 1) * np.sqrt(temperature)
   
   # Plot the training data and test data.
-  f, ax = plt.subplots(nrows=1, ncols=1, figsize = (5, 5))
+  f, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (5, 5))
   ax.plot(training_x, training_y, "b.", label = "Training")
   ax.plot(test_x, sample_y, "r.", label = "Test")
   ax.set_ylim(-11, 11)
   ax.set_title("Modes = " + str(MODES) + ", Temperature = " + str(temperature))
   ax.legend(loc = "lower right")
+  ax.grid()
   
-  # Used to return the plot as an image rray
   f.canvas.draw()
   image = np.frombuffer(f.canvas.tostring_rgb(), dtype = "uint8")
   image = image.reshape(f.canvas.get_width_height()[::-1] + (3,))
+  plt.close(f)
   
   return image
 
 # Plot the training data.
 plot_training_data(file_name = "training_data")
 
-# Available parameters for type of function training(type, file_name)
-# mdn: A mixture density network
-# fc: A network with a single hidden layer
+# Function training(type, file_name):
+#
+# Available parameters for type:
+# - "mdn": A mixture density network
+# - "fc": A network with a single hidden layer
+# file_name determines the name of all saved files.
 training(type = "mdn", file_name = "mdn_" + str(MODES))
 training(type = "fc", file_name = "fc")
 
-# file_name of function temperature_comparison(file_name, list_temperature)
-# determines which file from "Saves" folder will be used to restore the network variables.
+# Function temperature_comparison(file_name, list_temperature):
+#
+# file_name determines which file from "Saves" folder will be used to restore the network variables.
 # Temperature influences how the output will be sampled from a set of gaussian distributions.
-# High temperature value: outputs are more scattered
-# Low temperature value: outputs are more concentrated
+# - High temperature value: outputs are more scattered
+# - Low temperature value: outputs are more concentrated
 temperature_comparison(file_name = "mdn_" + str(MODES), list_temperature = [0.1, 0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 3.0, 4.0, 5.0])

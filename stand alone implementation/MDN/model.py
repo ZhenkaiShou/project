@@ -16,18 +16,18 @@ class MDN_Model(object):
     # sigma(X) = standard deviation of the output for that mode (s.t. sigma > 0)
     self.logits = tf.layers.dense(self.h, MODES)
     self.mu = tf.layers.dense(self.h, MODES)
-    self.sigma = tf.layers.dense(self.h, MODES)
+    self.log_sigma = tf.layers.dense(self.h, MODES)
     
     self.pi = tf.nn.softmax(self.logits)
-    #self.pi = self.pi - tf.reduce_logsumexp(self.logits, 1, keepdims=True)
-    self.sigma = tf.exp(self.sigma)
+    #self.pi = self.logits - tf.reduce_logsumexp(self.logits, 1, keepdims=True)
+    self.sigma = tf.exp(self.log_sigma)
     
     # Minimize the negative log-likelihood of Y for a given X
     # loss = -log[p(Y|X)] 
     #      = -log[sum(p(Y, mode|X))]
     #      = -log[sum(p(mode)p(Y|X, mode))]
-    #      = -log[sum(pi(X) * N(Y|mu(X), sigma(X)))]
-    # N(Y|mu, sigma) = 1 / (sigma * sqrt(2 * pi)) * exp(-1/2 * ((Y - mu) / sigma)^2)
+    #      = -log[sum(pi(X) * N(Y|mu(X), sigma(X)^2))]
+    # N(Y|mu, sigma^2) = 1 / (sigma * sqrt(2 * pi)) * exp(-1/2 * ((Y - mu) / sigma)^2)
     # shape(Y) = (None, 1)
     # shape(pi) = (None, MODES)
     # shape(mu) = (None, MODES)
