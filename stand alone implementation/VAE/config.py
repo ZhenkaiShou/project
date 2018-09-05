@@ -9,6 +9,5 @@ BATCH_SIZE = 100
 EPOCH = 100
 
 SAVE_DIR = "./Saves/"
-SUMMARY_DIR = "./Summary/"
 CSV_DIR = "./CSV/"
 FIGURE_DIR = "./Figures/"
