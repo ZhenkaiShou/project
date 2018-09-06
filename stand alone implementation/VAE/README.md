@@ -17,7 +17,7 @@ We compare the performance between a VAE and an autoencoder (AE) in the followin
 
 ### Linear Interpolation of a VAE in 16D Latent Space:
 <p float="center">
-  <img src="/stand%20alone%20implementation/VAE/Figures/Mixture%20Reconstruction/vae_16_2_7.gif" alt="VAE" width="75%"/>
+  <img src="/stand%20alone%20implementation/VAE/Figures/Mixture%20Reconstruction/vae_16_2_7.gif" alt="VAE" width="50%"/>
 </p>
 
 ## Reference
