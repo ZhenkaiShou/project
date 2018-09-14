@@ -228,6 +228,84 @@ def plot_mixture_reconstruction(inputs, z, merged_z, merged_output):
 
   return image
 
+def plot_mixture_reconstructions_2(type, file_name, z1, z2):
+  # Random seed for reproducible result.
+  np.random.seed(15)
+  tf.set_random_seed(54)
+  
+  # Create folders.
+  if not os.path.isdir(SAVE_DIR):
+    os.makedirs(SAVE_DIR)
+  if not os.path.isdir(FIGURE_DIR):
+    os.makedirs(FIGURE_DIR)
+  if not os.path.isdir(FIGURE_DIR + "Mixture Reconstruction 2/"):
+    os.makedirs(FIGURE_DIR + "Mixture Reconstruction 2/")
+  
+  # Load data.
+  mnist = tf.keras.datasets.mnist
+  (training_images, training_labels), (test_images, test_labels) = mnist.load_data()
+  
+  # Normalize and reshape test images.
+  test_images = test_images / 255.0
+  test_images = np.reshape(test_images, [-1, INPUT_LENGTH * INPUT_WIDTH])
+  test_length = np.shape(test_images)[0]
+    
+  # Invoke the corresponding model.
+  model = VAE_Model()
+  if type == "vae":
+    model.vae()
+  else:
+    model.ae()
+  
+  with tf.Session() as sess:
+    # Load variables.
+    saver = tf.train.Saver()
+    saver.restore(sess, SAVE_DIR + file_name)
+    
+    # Compute the latent representation of all test images.
+    z_test = sess.run(model.z, feed_dict = {model.Inputs: test_images})
+    
+    # Compute the reconstruction image of a merged latent representation.
+    z_input = np.array([z1, z2])
+    parts = 50
+    merged_z = np.array([np.average(z_input, 0, weights = [1 - 1.0 / parts * i, 1.0 / parts * i]) for i in range(parts + 1)])
+    merged_output = sess.run(model.outputs, feed_dict = {model.z: merged_z})
+    output_endpoints = np.array([merged_output[0], merged_output[-1]])
+  tf.contrib.keras.backend.clear_session()
+  
+  imageio.mimsave(FIGURE_DIR + "Mixture Reconstruction 2/" + file_name + ".gif", 
+  [plot_mixture_reconstruction_2(output_endpoints, z_test, test_labels, z_input, merged_z[i], merged_output[i]) for i in range(parts + 1)], fps = 3)
+  
+def plot_mixture_reconstruction_2(output_endpoints, z_test, test_labels, z_input, merged_z, merged_output):
+  # Plot the reconstruction.
+  f, ax = plt.subplots(nrows = 2, ncols = 2, figsize = (6, 6))
+  ax[0, 0].imshow(np.reshape(output_endpoints[0], (INPUT_LENGTH, INPUT_WIDTH)), cmap = "gray")
+  ax[0, 0].set_title("Start", color = "r")
+  ax[0, 1].imshow(np.reshape(output_endpoints[1], (INPUT_LENGTH, INPUT_WIDTH)), cmap = "gray")
+  ax[0, 1].set_title("End", color = "b")
+  ax[1, 0].plot(z_input[0, 0], z_input[0, 1], "r.", label = "Start")
+  ax[1, 0].plot(z_input[1, 0], z_input[1, 1], "b.", label = "End")
+  ax[1, 0].plot(merged_z[0], merged_z[1], "k.", label = "Linear Interpolation")
+  ax[1, 0].set_title("Latent Representation")
+  ax[1, 0].grid()
+  cmap = plt.get_cmap("jet", N_CLASS)
+  scatter = ax[1, 0].scatter(z_test[:, 0], z_test[:, 1], c = test_labels, cmap = cmap)
+  #cbar = plt.colorbar(scatter)
+  #loc = (np.arange(0, N_CLASS) + 0.5) * (N_CLASS - 1) / N_CLASS
+  #cbar.set_ticks(loc)
+  #cbar.ax.set_yticklabels(np.arange(0, N_CLASS))
+  # cbar.set_label("Class Label")  
+  ax[1, 1].imshow(np.reshape(merged_output, (INPUT_LENGTH, INPUT_WIDTH)), cmap = "gray")
+  ax[1, 1].set_title("Reconstruction")
+  f.tight_layout()
+  
+  f.canvas.draw()
+  image = np.frombuffer(f.canvas.tostring_rgb(), dtype = "uint8")
+  image = image.reshape(f.canvas.get_width_height()[::-1] + (3,))
+  plt.close(f)
+
+  return image
+
 # Function training(type, file_name):
 #
 # Available parameters for type:
@@ -245,3 +323,12 @@ training(type = "ae", file_name = "ae_" + str(LATENT_UNITS))
 # n1, n2 determines the class label of two randomly sampled images.
 # - available parameters: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 plot_mixture_reconstructions(type = "vae", file_name = "vae_" + str(LATENT_UNITS), n1 = 2, n2 = 7)
+
+# Function plot_mixture_reconstruction_2(type, file_name, z1, z2)
+#
+# Available parameters for type:
+# - "vae": A variational autoencoder
+# - "ae": An autoencoder
+# file_name determines which file from "Saves" folder will be used to restore the network variables.
+# z1, z2 determines the starting and ending position in the latent space.
+plot_mixture_reconstructions_2(type = "vae", file_name = "vae_" + str(LATENT_UNITS), z1 = np.array([1, 3]), z2 = np.array([4, -1]))
