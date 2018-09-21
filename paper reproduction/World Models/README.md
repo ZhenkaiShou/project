@@ -76,6 +76,8 @@ python controller_training.py
 ## Performance
 ### Visualization of Controller:
 Due to limited resources, the training of the controller module is not fully complete.
+
+Below is a successful example that scored more than 900 points.
 <p float="center">
   <img src="/paper%20reproduction/World%20Models/Figures/Controller%20Visualization/0000.gif" />
 </p>
