@@ -15,6 +15,9 @@ PROCESS = 2
 CONTROLLER_MODE = config.CONTROLLER_MODE
 RENDER_MODE = config.RENDER_MODE
 
+USING_GPU = False
+MEMORY = 0.1
+
 RAW_DATA_DIR = config.RAW_DATA_DIR
 
 def random_sampling():
@@ -38,6 +41,12 @@ def random_sampling():
 def random_sampling_process(start_index, max_episode):
   import tensorflow as tf
   
+  if USING_GPU:
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction = MEMORY)
+    gpu_config = tf.ConfigProto(gpu_options = gpu_options)
+  else:
+    gpu_config = None
+  
   np.random.seed()
   
   # Load models.
@@ -47,8 +56,8 @@ def random_sampling_process(start_index, max_episode):
   rnn.build_model(is_training = False, is_assigning = True, is_single_input = True)
   con = Controller()
   
-  sess_vae = tf.Session(graph = vae.graph)
-  sess_rnn = tf.Session(graph = rnn.graph)
+  sess_vae = tf.Session(graph = vae.graph, config = gpu_config)
+  sess_rnn = tf.Session(graph = rnn.graph, config = gpu_config)
   
   env = MyCarRacing()
   
