@@ -5,7 +5,7 @@ This repository implements the [World Models](https://arxiv.org/abs/1803.10122) 
 ### Visualization of a trained Agent:
 Due to limited resources, the training of the controller module is not fully complete.
 <p float="center">
-  <img src="paper%20reproduction/World%20Models/Figures/Controller%20Visualization/0000.gif" />
+  <img src="/Figures/Controller%20Visualization/0000.gif" />
 </p>
 
 ## Reference
