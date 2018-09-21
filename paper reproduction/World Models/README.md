@@ -3,8 +3,11 @@
 This repository implements the [World Models](https://arxiv.org/abs/1803.10122) using the car racing environment.
 ## Dependencies
 tensorflow
+
 gym==0.9.4 (**Note**: The latest version of gym breaks this experiment.)
+
 box2d
+
 scipy
 ## Running on a Server
 Below are some tips of running the experiment on a server.
