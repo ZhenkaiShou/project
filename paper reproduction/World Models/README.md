@@ -1,6 +1,12 @@
 # Implementation of World Models
 ## Basics
 This repository implements the [World Models](https://arxiv.org/abs/1803.10122) using the car racing environment.
+
+Due to limited resources, the training of the controller module is not fully complete. Below is a successful example that scored more than 900 points.
+<p float="center">
+  <img src="/paper%20reproduction/World%20Models/Figures/Controller%20Visualization/0000.gif" />
+</p>
+
 ## Dependencies
 tensorflow
 
@@ -72,15 +78,6 @@ python rnn_training.py
 ```
 python controller_training.py
 ```
-
-## Performance
-### Visualization of Controller:
-Due to limited resources, the training of the controller module is not fully complete.
-
-Below is a successful example that scored more than 900 points.
-<p float="center">
-  <img src="/paper%20reproduction/World%20Models/Figures/Controller%20Visualization/0000.gif" />
-</p>
 
 ## Reference
 - [World Models](https://arxiv.org/abs/1803.10122)
