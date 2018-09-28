@@ -57,7 +57,6 @@ class SteinVAE_Model(object):
     
     # Gradients for SVGD.
     grad_svgd = tf.stack([-(tf.reduce_mean(tf.reshape(kernel[i], [-1, 1]) * grad_log_p, 0) + tf.reduce_mean(grad_kernel[i], 0)) for i in range(BATCH_SIZE)])
-    #vars_encoding = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope = "encoding")
     vars = tf.trainable_variables()
     grad_encoding = tf.gradients(self.z, vars, grad_ys = grad_svgd)
     
