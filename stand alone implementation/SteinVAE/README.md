@@ -26,7 +26,7 @@ Reconstructions from VAE are more blurry than the reconstructions from SteinVAE.
 </p>
 
 ## Reference
-- [Stein Variational Gradient Descent (the basics)](https://arxiv.org/abs/1608.04471)
+- [Stein Variational Gradient Descent (the basic algorithm behind SteinVAE)](https://arxiv.org/abs/1608.04471)
 - [Amortized_SVGD](https://github.com/lewisKit/Amortized_SVGD/blob/master/SteinVAE/steinvae.py)
 
 
