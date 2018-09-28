@@ -1,10 +1,10 @@
 import csv
-import glob
 import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 import tensorflow as tf
+
 from config import *
 from model import *
 
@@ -35,11 +35,13 @@ def training(type, file_name):
   training_images = training_images / 255.0
   training_images = np.reshape(training_images, [-1, INPUT_LENGTH * INPUT_WIDTH])
   training_length = np.shape(training_images)[0]
+  num_training_batch = training_length // BATCH_SIZE
   
   # Normalize and reshape test images.
   test_images = test_images / 255.0
   test_images = np.reshape(test_images, [-1, INPUT_LENGTH * INPUT_WIDTH])
   test_length = np.shape(test_images)[0]
+  num_test_batch = test_length // BATCH_SIZE
   
   # Invoke the corresponding model.
   model = VAE_Model()
@@ -52,8 +54,11 @@ def training(type, file_name):
     # Initialize variables.
     sess.run(tf.global_variables_initializer())
     
-    list_training_loss = []
-    list_test_loss = []
+    list_training_recons_loss = []
+    list_test_recons_loss = []
+    if type == "vae":
+      list_training_kl_divergence = []
+      list_test_kl_divergence = []
     
     for epoch in range(EPOCH):
       # Shuffle the training data.
@@ -61,27 +66,48 @@ def training(type, file_name):
       np.random.shuffle(random_index)
       random_training_images = training_images[random_index]
       
-      training_loss = 0
-      test_loss = 0
+      training_recons_loss = 0
+      test_recons_loss = 0
+      if type == "vae":
+        training_kl_divergence = 0
+        test_kl_divergence = 0
       
       # Training.
-      for i in range(np.ceil(training_length / BATCH_SIZE).astype(int)):
-        images = random_training_images[i*BATCH_SIZE:np.minimum((i+1)*BATCH_SIZE, training_length)]
-        [_, total_loss] = sess.run([model.train_op, model.total_loss], feed_dict = {model.Inputs: images})
-        training_loss += total_loss * np.shape(images)[0]
+      for i in range(num_training_batch):
+        images = random_training_images[i*BATCH_SIZE:(i+1)*BATCH_SIZE]
+        if type == "vae":
+          _, reconstruction_loss, kl_divergence = sess.run([model.train_op, model.reconstruction_loss, model.kl_divergence], feed_dict = {model.Inputs: images})
+          training_recons_loss += reconstruction_loss
+          training_kl_divergence += kl_divergence
+        else:
+          _, reconstruction_loss = sess.run([model.train_op, model.reconstruction_loss], feed_dict = {model.Inputs: images})
+          training_recons_loss += reconstruction_loss
       
       # Validation.
-      for i in range(np.ceil(test_length / BATCH_SIZE).astype(int)):
-        images = test_images[i*BATCH_SIZE:np.minimum((i+1)*BATCH_SIZE, test_length)]
-        total_loss = sess.run(model.total_loss, feed_dict = {model.Inputs: images})
-        test_loss += total_loss * np.shape(images)[0]
+      for i in range(num_test_batch):
+        images = test_images[i*BATCH_SIZE:(i+1)*BATCH_SIZE]
+        if type == "vae":
+          reconstruction_loss, kl_divergence = sess.run([model.reconstruction_loss, model.kl_divergence], feed_dict = {model.Inputs: images})
+          test_recons_loss += reconstruction_loss
+          test_kl_divergence += kl_divergence
+        else:
+          econstruction_loss = sess.run(model.reconstruction_loss, feed_dict = {model.Inputs: images})
+          test_recons_loss += reconstruction_loss
       
-      training_loss /= training_length
-      test_loss /= test_length
-      list_training_loss.append(training_loss)
-      list_test_loss.append(test_loss)
+      training_recons_loss /= num_training_batch
+      test_recons_loss /= num_test_batch
+      list_training_recons_loss.append(training_recons_loss)
+      list_test_recons_loss.append(test_recons_loss)
+      if type == "vae":
+        training_kl_divergence /= num_training_batch
+        test_kl_divergence /= num_test_batch
+        list_training_kl_divergence.append(training_kl_divergence)
+        list_test_kl_divergence.append(test_kl_divergence)
       
-      print("Epoch ", format(epoch, "03d"), ": Training Loss = ", format(training_loss, ".8f"), ", Test Loss = ", format(test_loss, ".8f"), sep = '')
+      if type == "vae":
+        print("Epoch ", format(epoch, "03d"), ": Training Loss = [", format(training_recons_loss, ".8f"), ", ", format(training_kl_divergence, ".8f"), "], Test Loss = [", format(test_recons_loss, ".8f"), ", ", format(test_kl_divergence, ".8f"), "]", sep = "")
+      else:
+        print("Epoch ", format(epoch, "03d"), ": Training Loss = ", format(training_recons_loss, ".8f"), ", Test Loss = ", format(test_recons_loss, ".8f"), sep = "")
     
     # Save the parameters.
     saver = tf.train.Saver()
@@ -89,24 +115,48 @@ def training(type, file_name):
     
     # Store data in the csv file.
     with open(CSV_DIR + file_name + ".csv", "w") as f:
-      fieldnames = ["Epoch", "Training Loss", "Test Loss"]
+      if type == "vae":
+        fieldnames = ["Epoch", "Training Reconstruction Loss", "Training KL Divergence", "Test Reconstruction Loss", "Test KL Divergence"]
+      else:
+        fieldnames = ["Epoch", "Training Reconstruction Loss", "Test Reconstruction Loss"]
       writer = csv.DictWriter(f, fieldnames = fieldnames, lineterminator = "\n")
       writer.writeheader()
       for epoch in range(EPOCH):
-        content = {"Epoch": epoch, "Training Loss": list_training_loss[epoch], "Test Loss": list_test_loss[epoch]}
+        content = {"Epoch": epoch, "Training Reconstruction Loss": list_training_recons_loss[epoch], "Test Reconstruction Loss": list_test_recons_loss[epoch]}
+        if type == "vae":
+          content.update({"Training KL Divergence": list_training_kl_divergence[epoch], "Test KL Divergence": list_test_kl_divergence[epoch]})
         writer.writerow(content)
     
     # Plot the average loss.
     list_epoch = list(range(EPOCH))
     
-    f, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (5, 5))
-    ax.plot(list_epoch, list_training_loss, "r-", label = "Training")
-    ax.plot(list_epoch, list_test_loss, "b-", label = "Test")
-    ax.set_title("Average Loss")
-    ax.set_xlabel("Epoch")
-    ax.set_ylabel("Loss")
-    ax.legend(loc = "upper right")
-    ax.grid()
+    if type == "vae":
+      f, ax = plt.subplots(nrows = 1, ncols = 2, figsize = (10, 5))
+      ax[0].plot(list_epoch, list_training_recons_loss, "r-", label = "Training")
+      ax[0].plot(list_epoch, list_test_recons_loss, "b-", label = "Test")
+      ax[0].set_title("Reconstruction Loss")
+      ax[0].set_xlabel("Epoch")
+      ax[0].set_ylabel("Loss")
+      ax[0].legend(loc = "upper right")
+      ax[0].grid()
+      ax[1].plot(list_epoch, list_training_kl_divergence, "r-", label = "Training")
+      ax[1].plot(list_epoch, list_test_kl_divergence, "b-", label = "Test")
+      ax[1].set_title("KL Divergence")
+      ax[1].set_xlabel("Epoch")
+      ax[1].set_ylabel("Loss")
+      ax[1].legend(loc = "lower right")
+      ax[1].grid()
+      f.tight_layout()
+    
+    else:
+      f, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (5, 5))
+      ax.plot(list_epoch, list_training_recons_loss, "r-", label = "Training")
+      ax.plot(list_epoch, list_test_recons_loss, "b-", label = "Test")
+      ax.set_title("Reconstruction Loss")
+      ax.set_xlabel("Epoch")
+      ax.set_ylabel("Loss")
+      ax.legend(loc = "upper right")
+      ax.grid()
     
     f.savefig(FIGURE_DIR + "Average Loss/" + file_name + ".png")
     plt.close(f)
@@ -311,8 +361,8 @@ def plot_mixture_reconstruction_2(output_endpoints, z_test, test_labels, z_input
 # Available parameters for type:
 # - "vae": A variational autoencoder
 # - "ae": An autoencoder
-training(type = "vae", file_name = "vae_" + str(LATENT_UNITS))
-training(type = "ae", file_name = "ae_" + str(LATENT_UNITS))
+training(type = "vae", file_name = "vae_" + str(Z_LENGTH))
+training(type = "ae", file_name = "ae_" + str(Z_LENGTH))
 
 # Function plot_mixture_reconstruction(type, file_name, n1, n2)
 #
@@ -322,7 +372,7 @@ training(type = "ae", file_name = "ae_" + str(LATENT_UNITS))
 # file_name determines which file from "Saves" folder will be used to restore the network variables.
 # n1, n2 determines the class label of two randomly sampled images.
 # - available parameters: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-plot_mixture_reconstructions(type = "vae", file_name = "vae_" + str(LATENT_UNITS), n1 = 2, n2 = 7)
+plot_mixture_reconstructions(type = "vae", file_name = "vae_" + str(Z_LENGTH), n1 = 2, n2 = 7)
 
 # Function plot_mixture_reconstruction_2(type, file_name, z1, z2)
 #
@@ -331,4 +381,4 @@ plot_mixture_reconstructions(type = "vae", file_name = "vae_" + str(LATENT_UNITS
 # - "ae": An autoencoder
 # file_name determines which file from "Saves" folder will be used to restore the network variables.
 # z1, z2 determines the starting and ending position in the latent space.
-plot_mixture_reconstructions_2(type = "vae", file_name = "vae_" + str(LATENT_UNITS), z1 = np.array([1, 3]), z2 = np.array([4, -1]))
+#plot_mixture_reconstructions_2(type = "vae", file_name = "vae_" + str(Z_LENGTH), z1 = np.array([1, 3]), z2 = np.array([4, -1]))
