@@ -11,7 +11,7 @@ DDPG can be implemented in such a way that we can update the actor network $ \pi
 
 ### Visualization:
 <p float="center">
-  <img src="/stand%20alone%20implementation/VAE/Figures/Visualization/pendulum.png" width="50%"/>
+  <img src="/stand%20alone%20implementation/DDPG/Figures/Visualization/pendulum.gif" width="50%"/>
 </p>
 
 ## Reference
