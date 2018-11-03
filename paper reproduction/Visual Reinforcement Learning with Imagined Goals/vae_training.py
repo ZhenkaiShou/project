@@ -7,7 +7,7 @@ import config
 from vae import VAE
 
 # Local hyperparameters
-EPOCH = 150
+EPOCH = 5
 BATCH_SIZE = 100
 MAX_FRAME = config.MAX_FRAME
 LEARNING_RATE = 1e-4
@@ -32,16 +32,17 @@ def vae_training(file_name = "vae"):
   list_obs = []
   for i in range(data_length):
     obs = np.load(RAW_DATA_DIR + file_list[i])["obs"]
-    list_obs.append(np.reshape(obs, (-1, 64, 64, 3)))
+    list_obs.append(np.reshape(obs, (1, *obs.shape)))
   list_obs = np.concatenate(list_obs, 0)
   
   # Load models.
   vae = VAE(name = "vae")
   vae.build_training()
+  initialize_op = tf.global_variables_initializer()
   
   with tf.Session() as sess:
     # Initialize the network.
-    sess.run(tf.global_variables_initializer())
+    sess.run(initialize_op)
     
     list_reconstruction_loss = []
     list_kl_divergence = []
@@ -59,7 +60,7 @@ def vae_training(file_name = "vae"):
         list_kl_divergence.append(kl_divergence)
         list_loss.append(loss)
         
-        if (epoch * num_batch + batch) % 10 == 0:
+        if (epoch * num_batch + batch) % 100 == 0:
           print("Iteration ", format(epoch * num_batch + batch, "05d"), ":", sep = "") 
           print("  Reconstruction Loss = ", format(reconstruction_loss, ".8f"), ", KL Divergence = ", format(kl_divergence, ".8f"), sep = "")
     

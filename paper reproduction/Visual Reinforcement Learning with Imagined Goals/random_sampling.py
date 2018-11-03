@@ -9,10 +9,9 @@ from reacher import MyReacherEnv
 A_LENGTH = config.A_LENGTH
 ACTION_SCALING = config.ACTION_SCALING
 MAX_FRAME = config.MAX_FRAME
-EXPLORATION_ACTION_NOISE = 0.5
-MAX_EXPLORATION_ACTION_NOISE = 1.0
-MAX_EPISODE = 200
-PROCESS = 1
+ACTION_NOISE = 0.5
+MAX_EPISODE = 5000
+PROCESS = 2
 
 RAW_DATA_DIR = config.RAW_DATA_DIR
 
@@ -40,6 +39,7 @@ def random_sampling_process(start_index, max_episode):
   
   for episode in range(max_episode):
     list_obs = []
+    list_action = []
     
     # Reset the environment.
     env.reset()
@@ -49,15 +49,17 @@ def random_sampling_process(start_index, max_episode):
       list_obs.append(obs)
       
       # Sample random action.
-      noise = np.clip(EXPLORATION_ACTION_NOISE * np.random.randn(A_LENGTH), -MAX_EXPLORATION_ACTION_NOISE, MAX_EXPLORATION_ACTION_NOISE)
-      a = np.clip(ACTION_SCALING * noise, -ACTION_SCALING, ACTION_SCALING)
+      noise = ACTION_NOISE * np.random.randn(A_LENGTH)
+      action = np.clip(ACTION_SCALING * noise, -ACTION_SCALING, ACTION_SCALING)
+      list_action.append(action)
       
       # Interact with the game engine.
-      env.step(a)
+      env.step(action)
     
     # Save file.
     list_obs = np.array(list_obs, dtype = np.uint8)
-    np.savez_compressed(RAW_DATA_DIR + format(start_index + episode, "04d"), obs = list_obs)
+    list_action = np.array(list_action, dtype = np.float16)
+    np.savez_compressed(RAW_DATA_DIR + format(start_index + episode, "04d"), obs = list_obs, action = list_action)
   
   env.close()
 
