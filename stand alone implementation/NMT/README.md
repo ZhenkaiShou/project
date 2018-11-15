@@ -13,11 +13,11 @@ For more detailed information, please refer to this [tutorial](https://github.co
 To run the code you need the latest version of TensorFlow (>=1.12) installed.
 
 ## Usage
-NModify the hyperparameters by editting config.py.
+**Note**: Hyperparameters can be modified in config.py.
 
-Run train.py to train the model. The training dataset will be automatically downloaded if they do not exist.
+Run training.py to train the model. The training dataset will be automatically downloaded if they do not exist.
 ```
-python train.py
+python training.py
 ```
 
 Run evaluation.py to evaluate the trained model. An average BLEU score over the selected dataset will be returned.
