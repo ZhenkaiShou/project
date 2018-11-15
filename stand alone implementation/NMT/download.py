@@ -16,11 +16,11 @@ def download():
   download_file(site_url + "iwslt15.en-vi/train.en", DATA_DIR + SOURCE_TRAINING_FILE)  
   download_file(site_url + "iwslt15.en-vi/train.vi", DATA_DIR + TARGET_TRAINING_FILE)
   
-  download_file(site_url + "iwslt15.en-vi/tst2012.en", DATA_DIR + "tst2012.en")
-  download_file(site_url + "iwslt15.en-vi/tst2012.vi", DATA_DIR + "tst2012.vi")
+  download_file(site_url + "iwslt15.en-vi/tst2012.en", DATA_DIR + SOURCE_TEST_FILE_1)
+  download_file(site_url + "iwslt15.en-vi/tst2012.vi", DATA_DIR + TARGET_TEST_FILE_1)
   
-  download_file(site_url + "iwslt15.en-vi/tst2013.en", DATA_DIR + "tst2013.en")
-  download_file(site_url + "iwslt15.en-vi/tst2013.vi", DATA_DIR + "tst2013.vi")
+  download_file(site_url + "iwslt15.en-vi/tst2013.en", DATA_DIR + SOURCE_TEST_FILE_2)
+  download_file(site_url + "iwslt15.en-vi/tst2013.vi", DATA_DIR + TARGET_TEST_FILE_2)
   
   download_file(site_url + "iwslt15.en-vi/vocab.en", DATA_DIR + SOURCE_VOCAB_FILE)
   download_file(site_url + "iwslt15.en-vi/vocab.vi", DATA_DIR + TARGET_VOCAB_FILE)
