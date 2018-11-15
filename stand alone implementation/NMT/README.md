@@ -7,7 +7,7 @@ The implementation mainly follows the [Tensorflow Neural Machine Translation Tut
 - Attention mechanism at decoder;
 - Beam Search strategy decoder during inference.
 
-For more detailed information, please refer to this [tutorial](https://github.com/tensorflow/nmt).
+For more detailed information, please refer to the [official tutorial](https://github.com/tensorflow/nmt).
 
 ## Requirement
 To run the code you need the latest version of TensorFlow (>=1.12) installed.
