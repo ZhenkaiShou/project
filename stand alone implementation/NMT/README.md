@@ -31,7 +31,7 @@ python test.py
 ```
 
 ## Performance
-If you follow the above steps without modifying the hyperparameters, you will see a BLEU score around 20 for the test dataset "tst2012". Better score can be achieved by tuning the hyperparameters (e.g. hidden units, learning rate, or even the network layer).
+You will probably get a BLEU score around 20.0 for the test dataset "tst2012" if you follow the above steps without changing the hyperparameters. Better score can be achieved by tuning the hyperparameters (number of hidden units, learning rate, etc.).
 
 ## Reference
 - [Tensorflow Neural Machine Translation Tutorial](https://github.com/tensorflow/nmt)
