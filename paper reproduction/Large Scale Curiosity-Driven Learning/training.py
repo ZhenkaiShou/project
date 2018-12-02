@@ -43,7 +43,7 @@ def train():
   obs_space = env.observation_space
   action_space = env.action_space
   
-  # Estimate the mean and standard variance of observations.
+  # Estimate the mean and standard deviation of observations.
   env.reset()
   list_obs = []
   for _ in range(RANDOM_STEP):
