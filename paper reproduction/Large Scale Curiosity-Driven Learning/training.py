@@ -150,7 +150,7 @@ def train():
       # The total reward is a mixture of extrinsic reward and intrinsic reward.
       buffer_reward[:] = COEF_EXT_REWARD * np.clip(buffer_ext_reward, -1.0, 1.0) + COEF_INT_REWARD * buffer_int_reward
       
-      # Normalize reward by dividing it by a running estimate of the standard deviation of the sum of discounted rewards.(correct)
+      # Normalize reward by dividing it by a running estimate of the standard deviation of the sum of discounted rewards.
       # 1. Compute the sum of discounted rewards.
       for step in range(TIME_STEP_PER_UPDATE):
         sum_reward = buffer_reward[:, step] + GAMMA * sum_reward
