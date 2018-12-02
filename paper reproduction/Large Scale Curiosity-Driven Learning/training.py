@@ -16,7 +16,7 @@ ENV_NAME = config.ENV_NAME
 AUXILIARY_TASK = config.AUXILIARY_TASK
 AUTOSAVE_STEP = 10
 RANDOM_STEP = 10000
-NUM_ENV = 32
+NUM_ENV = 128
 EPOCH = 3
 BATCH_SIZE = 16
 TIME_STEP_PER_UPDATE = 128
@@ -188,10 +188,10 @@ def train():
         for i in range(num_batch):
           batch_id = random_id[i * BATCH_SIZE: np.minimum(NUM_ENV, (i+1) * BATCH_SIZE)] 
           _, auxiliary_loss, dyna_loss = sess.run([dynamics.train_op, dynamics.auxiliary_loss, dynamics.dyna_loss],
-            feed_dict = {dynamics.Obs: buffer_obs[:, :-1], dynamics.ObsNext: buffer_obs[:, 1:], dynamics.Action: buffer_action})
+            feed_dict = {dynamics.Obs: buffer_obs[batch_id, :-1], dynamics.ObsNext: buffer_obs[batch_id, 1:], dynamics.Action: buffer_action[batch_id]})
           _, value_loss, pg_loss, entropy_loss = sess.run([policy.train_op, policy.value_loss, policy.pg_loss, policy.entropy_loss], 
-            feed_dict = {policy.Obs: buffer_obs[:, :-1], policy.Action: buffer_action, 
-            policy.Adv: buffer_adv, policy.VTarget: buffer_v_target, policy.LogProbOld: buffer_log_prob})
+            feed_dict = {policy.Obs: buffer_obs[batch_id, :-1], policy.Action: buffer_action[batch_id], 
+            policy.Adv: buffer_adv[batch_id], policy.VTarget: buffer_v_target[batch_id], policy.LogProbOld: buffer_log_prob[batch_id]})
           total_update_step += 1
       
       # Update rollout step.
