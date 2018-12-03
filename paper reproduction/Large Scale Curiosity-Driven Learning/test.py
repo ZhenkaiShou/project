@@ -132,4 +132,4 @@ def plot_obs(obs, reward):
   return image
 
 if __name__ == "__main__":
-  record()
+  test()

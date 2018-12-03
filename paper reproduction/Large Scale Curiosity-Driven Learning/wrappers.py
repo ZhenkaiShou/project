@@ -8,13 +8,15 @@ from PIL import Image
 # Local hyperparameters
 FRAME_SKIP = 4
 FRAME_STACK = 4
+MAX_EPISODE_LENGTH = 10000
 
 def make_atari(env_name):
   env = gym.make(env_name)
   env = NoopResetEnv(env)
   env = MaxAndSkipEnv(env, skip = FRAME_SKIP)
-  env = ProcessFrame84(env)
+  env = ProcessFrame84(env, crop = False)
   env = FrameStack(env, k = FRAME_STACK)
+  env = ExtraTimeLimit(env, max_episode_steps = MAX_EPISODE_LENGTH)
   return env
 
 '''
@@ -177,3 +179,20 @@ class LazyFrames(object):
   
   def __getitem__(self, i):
     return self._force()[i]
+
+class ExtraTimeLimit(gym.Wrapper):
+  def __init__(self, env, max_episode_steps=None):
+    gym.Wrapper.__init__(self, env)
+    self._max_episode_steps = max_episode_steps
+    self._elapsed_steps = 0
+  
+  def step(self, action):
+    observation, reward, done, info = self.env.step(action)
+    self._elapsed_steps += 1
+    if self._elapsed_steps > self._max_episode_steps:
+      done = True
+    return observation, reward, done, info
+  
+  def reset(self):
+    self._elapsed_steps = 0
+    return self.env.reset()

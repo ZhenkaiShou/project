@@ -80,11 +80,16 @@ def train():
     reward_std = 1.0
     reward_count = 0
     
+    # Initialize the counters.
     total_rollout_step = 0
     total_update_step = 0
     total_frame = 0
+    
+    # Initialize the recording of highest rewards.
+    done_first = np.zeros(NUM_ENV)
     sum_ext_reward = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
     list_highest_reward = []
+    
     num_batch = int(np.ceil(NUM_ENV / BATCH_SIZE))
     
     # Each while loop is a rollout step, which first interacts with the environment and then updates the network.
@@ -140,7 +145,9 @@ def train():
       
       # Get the highest reward.
       for step in range(TIME_STEP_PER_UPDATE):
-        sum_ext_reward[:, step] = buffer_ext_reward[:, step] + (1 - buffer_done[:, step-1]) * sum_ext_reward[:, step-1]
+        done_prev = done_first if step == 0 else buffer_done[:, step-1]
+        sum_ext_reward[:, step] = buffer_ext_reward[:, step] + (1 - done_prev) * sum_ext_reward[:, step-1]
+      done_first[:] = buffer_done[:, TIME_STEP_PER_UPDATE-1]
       highest_reward = np.amax(sum_ext_reward)
       list_highest_reward.append(highest_reward)
       
