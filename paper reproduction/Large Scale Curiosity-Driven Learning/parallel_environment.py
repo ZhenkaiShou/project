@@ -1,19 +1,19 @@
 import multiprocessing as mp
 import numpy as np
 
-def run_environment_process(pipe, env):
+def run_subprocess(pipe, env):
   while True:
-    # Wait for the next order.
-    type, data = pipe.recv()
-    if type == "reset":
+    # Wait for the next command.
+    cmd, data = pipe.recv()
+    if cmd == "reset":
       obs = env.reset()
       pipe.send(obs)
-    if type == "step":
+    if cmd == "step":
       obs, reward, done, info = env.step(data)
       if done:
         obs = env.reset()
       pipe.send((obs, reward, done, info))
-    if type == "close":
+    if cmd == "close":
       pipe.send(None)
       pipe.close()
       env.close()
@@ -28,7 +28,7 @@ class ParallelEnvironment(object):
     # Create a subprocess for each environment.
     for env in list_env:
       pipe_parent, pipe_child = mp.Pipe()
-      process = mp.Process(target = run_environment_process, args = (pipe_child, env))
+      process = mp.Process(target = run_subprocess, args = (pipe_child, env))
       process.start()
       pipe_child.close()
       self.list_pipe_parent.append(pipe_parent)

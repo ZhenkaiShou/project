@@ -133,3 +133,4 @@ def plot_obs(obs, reward):
 
 if __name__ == "__main__":
   test()
+  #record()
