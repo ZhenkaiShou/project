@@ -92,7 +92,7 @@ def train():
     
     num_batch = int(np.ceil(NUM_ENV / BATCH_SIZE))
     
-    # Each while loop is a rollout step, which first interacts with the environment and then updates the network.
+    # Each while loop performs a rollout, which first interacts with the environment and then updates the network.
     while total_frame < MAX_FRAME:
       # Initialize buffers.
       buffer_obs = np.zeros((NUM_ENV, ROLLOUT_STEP + 1, *obs_space.shape))
