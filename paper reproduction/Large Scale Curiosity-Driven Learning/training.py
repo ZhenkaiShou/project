@@ -19,7 +19,7 @@ RANDOM_STEP = 10000
 NUM_ENV = 128
 EPOCH = 3
 BATCH_SIZE = 16
-TIME_STEP_PER_UPDATE = 128
+ROLLOUT_STEP = 128
 MAX_FRAME = 1e8
 COEF_EXT_REWARD = 0.0
 COEF_INT_REWARD = 1.0
@@ -87,28 +87,28 @@ def train():
     
     # Initialize the recording of highest rewards.
     done_first = np.zeros(NUM_ENV)
-    sum_ext_reward = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
+    sum_ext_reward = np.zeros((NUM_ENV, ROLLOUT_STEP))
     list_highest_reward = []
     
     num_batch = int(np.ceil(NUM_ENV / BATCH_SIZE))
     
     # Each while loop is a rollout step, which first interacts with the environment and then updates the network.
-    while total_frame <= MAX_FRAME:
+    while total_frame < MAX_FRAME:
       # Initialize buffers.
-      buffer_obs = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE + 1, *obs_space.shape))
-      buffer_action = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
-      buffer_ext_reward = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
-      buffer_done = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
-      buffer_log_prob = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
-      buffer_v = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE + 1))
-      buffer_int_reward = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
-      buffer_reward = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
-      buffer_sum_reward = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
-      buffer_adv = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
-      buffer_v_target = np.zeros((NUM_ENV, TIME_STEP_PER_UPDATE))
+      buffer_obs = np.zeros((NUM_ENV, ROLLOUT_STEP + 1, *obs_space.shape))
+      buffer_action = np.zeros((NUM_ENV, ROLLOUT_STEP))
+      buffer_ext_reward = np.zeros((NUM_ENV, ROLLOUT_STEP))
+      buffer_done = np.zeros((NUM_ENV, ROLLOUT_STEP))
+      buffer_log_prob = np.zeros((NUM_ENV, ROLLOUT_STEP))
+      buffer_v = np.zeros((NUM_ENV, ROLLOUT_STEP + 1))
+      buffer_int_reward = np.zeros((NUM_ENV, ROLLOUT_STEP))
+      buffer_reward = np.zeros((NUM_ENV, ROLLOUT_STEP))
+      buffer_sum_reward = np.zeros((NUM_ENV, ROLLOUT_STEP))
+      buffer_adv = np.zeros((NUM_ENV, ROLLOUT_STEP))
+      buffer_v_target = np.zeros((NUM_ENV, ROLLOUT_STEP))
       
-      # Interact with the environment for TIME_STEP_PER_UPDATE steps.
-      for step in range(TIME_STEP_PER_UPDATE):
+      # Interact with the environment for ROLLOUT_STEP steps.
+      for step in range(ROLLOUT_STEP):
         # Get observation.
         if total_frame == 0:
           obs = par_env.reset()
@@ -132,7 +132,7 @@ def train():
         buffer_log_prob[:, step] = log_prob
         buffer_v[:, step] = v
         
-        if step == TIME_STEP_PER_UPDATE - 1:
+        if step == ROLLOUT_STEP - 1:
           # Extra operations for the last time step.
           obs_next = (obs_next - obs_mean) / obs_std
           v_next = sess.run(policy.v, feed_dict = {policy.Obs: np.expand_dims(obs_next, 1)})
@@ -144,10 +144,10 @@ def train():
         total_frame += NUM_ENV
       
       # Get the highest reward.
-      for step in range(TIME_STEP_PER_UPDATE):
+      for step in range(ROLLOUT_STEP):
         done_prev = done_first if step == 0 else buffer_done[:, step-1]
         sum_ext_reward[:, step] = buffer_ext_reward[:, step] + (1 - done_prev) * sum_ext_reward[:, step-1]
-      done_first[:] = buffer_done[:, TIME_STEP_PER_UPDATE-1]
+      done_first[:] = buffer_done[:, ROLLOUT_STEP-1]
       highest_reward = np.amax(sum_ext_reward)
       list_highest_reward.append(highest_reward)
       
@@ -159,7 +159,7 @@ def train():
       
       # Normalize reward by dividing it by a running estimate of the standard deviation of the sum of discounted rewards.
       # 1. Compute the sum of discounted rewards.
-      for step in range(TIME_STEP_PER_UPDATE):
+      for step in range(ROLLOUT_STEP):
         sum_reward = buffer_reward[:, step] + GAMMA * sum_reward
         buffer_sum_reward[:, step] = sum_reward
       # 2. Compute mean and standard deviation of the sum of discounted rewards.
@@ -176,7 +176,7 @@ def train():
       # - adv_t = r_t + gamma * v_(t+1) - v_t
       adv = buffer_reward + GAMMA * buffer_v[:, 1:] - buffer_v[:, :-1]
       sum_adv = np.zeros(NUM_ENV)
-      for step in range(TIME_STEP_PER_UPDATE - 1, -1, -1):
+      for step in range(ROLLOUT_STEP - 1, -1, -1):
         sum_adv = adv[:, step] + GAMMA * LAMBDA * sum_adv
         buffer_adv[:, step] = sum_adv
       
@@ -215,7 +215,7 @@ def train():
         saver_dynamics.save(sess, save_path + "dynamics")
         saver_policy.save(sess, save_path + "policy")
         # Plot reward.
-        interval = NUM_ENV * TIME_STEP_PER_UPDATE
+        interval = NUM_ENV * ROLLOUT_STEP
         list_frame = list(range(interval, (total_rollout_step+1) * interval, interval))
         plot_reward(list_frame, list_highest_reward, figure_path)
     
@@ -223,7 +223,7 @@ def train():
     saver_dynamics.save(sess, save_path + "dynamics")
     saver_policy.save(sess, save_path + "policy")
     # Plot reward.
-    interval = NUM_ENV * TIME_STEP_PER_UPDATE
+    interval = NUM_ENV * ROLLOUT_STEP
     list_frame = list(range(interval, total_frame + interval, interval))
     plot_reward(list_frame, list_highest_reward, figure_path)
   par_env.close()
