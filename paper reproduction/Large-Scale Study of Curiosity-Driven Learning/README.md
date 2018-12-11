@@ -4,6 +4,8 @@ This repository implements the [Large-Scale Study of Curiosity-Driven Learning](
 
 <p align="center">
   <img src="/paper%20reproduction/Large-Scale%20Study%20of%20Curiosity-Driven%20Learning/Figures/gameplay.gif" />
+</p>
+<p>
   An agent plays Breakout with pure curiosity.
 </p>
 
