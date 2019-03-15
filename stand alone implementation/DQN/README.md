@@ -3,13 +3,30 @@
 This repository implements the Deep Q-Network (DQN) algorithm with 3 different vairants: 
 - standard
 - asynchronous
-- parallel environments
-## Details of Different Variations
+- parallel
+## Training Pipeline of Different Variations
 ### Standard
-
+- initialize network variables
+- initialize the environment
+- loop until reaching maximum steps
+  - sample action using exploration policy
+  - store data into replay buffer
+  - sample training data from replay buffer
+  - train the network for one mini-batch
 ### Asynchronous
-
-### Parallel Environments
+- initialize the global network variables
+- create N processes
+- for each process do the following
+  - initialize a local environment
+  - loop until reaching maximum global steps
+    - get a copy of the latest global network
+    - sample action using exploration policy
+    - store data into replay buffer
+    - sample training data from replay buffer
+    - compute the gradients of the local network based on the training data
+    - apply the gradients to the global network
+    
+### Parallel
 
 ## Performance
 To save time, the agent is trained on the atari game "Pong" since this is a simple environment which can be easily solved by exploiting the weakness of the computer-controlled opponent.
@@ -23,7 +40,9 @@ The learning curve w.r.t. the episodic reward during training is shown below. Fr
 </p>
 
 ### Training Time
-All these 3 variants are trained via Amazon Web Service with a g3.4xlarge instance. The training time for each variant is shown below.
+All these 3 variants are trained via Amazon Web Service with a g3.4xlarge instance. For asynchronous and parallel implementation, 10 workers / environments are created.
+
+The training time for each variant is shown below.
 
 |    Variant   | Time(s) |
 |:------------:|:-------:|
