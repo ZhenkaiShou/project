@@ -8,25 +8,34 @@ This repository implements the Deep Q-Network (DQN) algorithm with 3 different v
 ### Standard
 - initialize network variables
 - initialize the environment
-- loop until reaching maximum steps
-  - sample action using exploration policy
+- loop until reaching maximum steps:
+  - sample an action using exploration policy
   - store data into replay buffer
   - sample training data from replay buffer
   - train the network for one mini-batch
 ### Asynchronous
 - initialize the global network variables
 - create N processes
-- for each process do the following
+- for each process do the following **simultaneously**:
   - initialize a local environment
-  - loop until reaching maximum global steps
+  - loop until reaching maximum global steps:
     - get a copy of the latest global network
-    - sample action using exploration policy
+    - sample an action using exploration policy
     - store data into replay buffer
     - sample training data from replay buffer
     - compute the gradients of the local network based on the training data
     - apply the gradients to the global network
-    
 ### Parallel
+- initialize the network variables
+- create N processes
+- for each process:
+  - initialize a local environment
+- loop until reaching maximum steps:
+  - for each process do the following **simultaneously**:
+    - sample an action using exploration policy
+  - store all data into replay buffer
+  - sample training data from replay buffer
+  - train the network for one mini-batch
 
 ## Performance
 To save time, the agent is trained on the atari game "Pong" since this is a simple environment which can be easily solved by exploiting the weakness of the computer-controlled opponent.
