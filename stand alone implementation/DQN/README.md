@@ -1,27 +1,34 @@
 # Simple implementation of Deep Q-Network
 ## Basics
-This repository implements the Deep Q-Network (DQN) algorithm in 3 different ways: 
-- standard implementation
-- asynchronous implementation
-- parallel environment
+This repository implements the Deep Q-Network (DQN) algorithm with 3 different vairants: 
+- standard
+- asynchronous
+- parallel environments
+## Details of Different Variations
+### Standard
+
+### Asynchronous
+
+### Parallel Environments
+
 ## Performance
 To save time, the agent is trained on the atari game "Pong" since this is a simple environment which can be easily solved by exploiting the weakness of the computer-controlled opponent.
 
 Below are the learning curve w.r.t. the episodic reward during training.
 
-### Standard implementation:
+### Standard:
 <p float="center">
   <img src="/stand%20alone%20implementation/DQN/Standard/Figures/Training/dqn.png" width="40%"/>
 </p>
 
-### Asynchronous implementation:
+### Asynchronous:
 <p float="center">
   <img src="/stand%20alone%20implementation/DQN/Asynchronous/Figures/Training/async_dqn.png" width="40%"/>
 </p>
 
-### Parallel environment:
+### Parallel Environments:
 <p float="center">
-  <img src="/stand%20alone%20implementation/DQN/Parallel%20Environment/Figures/Training/par_dqn.png" width="40%"/>
+  <img src="/stand%20alone%20implementation/DQN/Parallel%20Environments/Figures/Training/par_dqn.png" width="40%"/>
 </p>
 
 ## Reference
