@@ -21,6 +21,7 @@ The learning curve w.r.t. the episodic reward during training is shown below. Fr
   <img src="/stand%20alone%20implementation/DQN/Asynchronous/Figures/Training/async_dqn.png" width="30%"/>
   <img src="/stand%20alone%20implementation/DQN/Parallel%20Environments/Figures/Training/par_dqn.png" width="30%"/>
 </p>
+
 ### Training Time
 All these 3 variants are trained via Amazon Web Service with a g3.4xlarge instance. The training time for each variant is shown below.
 
