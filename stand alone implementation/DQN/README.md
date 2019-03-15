@@ -4,7 +4,7 @@ This repository implements the Deep Q-Network (DQN) algorithm with 3 different v
 - standard
 - asynchronous
 - parallel
-## Training Pipeline of Different Variations
+## Training Pipeline of Different Variants
 ### Standard
 - initialize network variables
 - initialize the environment
