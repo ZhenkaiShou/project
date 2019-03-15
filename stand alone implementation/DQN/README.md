@@ -11,17 +11,17 @@ Below are the learning curve w.r.t. the episodic reward during training.
 
 ### Standard implementation:
 <p float="center">
-  <img src="/stand%20alone%20implementation/DQN/Figures/Training/dqn.png" width="40%"/>
+  <img src="/stand%20alone%20implementation/DQN/Standard/Figures/Training/dqn.png" width="40%"/>
 </p>
 
 ### Asynchronous implementation:
 <p float="center">
-  <img src="/stand%20alone%20implementation/DQN/Figures/Training/async_dqn.png" width="40%"/>
+  <img src="/stand%20alone%20implementation/DQN/Asynchronous/Figures/Training/async_dqn.png" width="40%"/>
 </p>
 
 ### Parallel environment:
 <p float="center">
-  <img src="/stand%20alone%20implementation/DQN/Figures/Training/par_dqn.png" width="40%"/>
+  <img src="/stand%20alone%20implementation/DQN/Parallel%20Environment/Figures/Training/par_dqn.png" width="40%"/>
 </p>
 
 ## Reference
