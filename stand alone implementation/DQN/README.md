@@ -24,7 +24,7 @@ This repository implements the Deep Q-Network (DQN) algorithm with 3 different v
   - Loop until reaching maximum global steps:
     - Get a copy of the latest global network;
     - Sample an action using exploration policy;
-    - Simulate the local environment with the sampled action
+    - Simulate the local environment with the sampled action;
     - Store data into the local replay buffer;
     - Sample training data from the local replay buffer;
     - Compute the gradients of the copied network based on the training data;
