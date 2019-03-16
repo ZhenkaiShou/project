@@ -6,39 +6,42 @@ This repository implements the Deep Q-Network (DQN) algorithm with 3 different v
 - [Parallel](https://github.com/ZhenkaiShou/project/tree/master/stand%20alone%20implementation/DQN/Parallel)
 ## Training Pipeline of Different Variants
 ### Standard
-- initialize network variables
-- initialize the environment
-- loop until reaching maximum steps:
-  - sample an action using exploration policy
-  - simulate the environemnt with the sampled action
-  - store data into replay buffer
-  - sample training data from replay buffer
-  - train the network for one mini-batch
+- Initialize network variables;
+- Initialize the environment;
+- Initialize the replay buffer;
+- Loop until reaching maximum steps:
+  - Sample an action using exploration policy;
+  - Simulate the environemnt with the sampled action;
+  - Store data into the replay buffer;
+  - Sample training data from the replay buffer;
+  - Train the network for one mini-batch.
 ### Asynchronous
-- initialize the global network variables
-- create N processes
-- for each process do the following **simultaneously**:
-  - initialize a local environment
-  - loop until reaching maximum global steps:
-    - get a copy of the latest global network
-    - sample an action using exploration policy
-    - simulate the local environment with the sampled action
-    - store data into replay buffer
-    - sample training data from replay buffer
-    - compute the gradients of the copied network based on the training data
-    - apply the gradients to the global network
+- Initialize the global network variables;
+- Create N processes;
+- For each process do the following **simultaneously**:
+  - Initialize a local environment;
+  - Initialize a local replay buffer;
+  - Loop until reaching maximum global steps:
+    - Get a copy of the latest global network;
+    - Sample an action using exploration policy;
+    - Simulate the local environment with the sampled action
+    - Store data into the local replay buffer;
+    - Sample training data from the local replay buffer;
+    - Compute the gradients of the copied network based on the training data;
+    - Apply the gradients to the global network.
 ### Parallel
-- initialize the network variables
-- create N processes
-- for each process:
-  - initialize a local environment
-- loop until reaching maximum steps:
-  - for each process do the following **simultaneously**:
-    - sample an action using exploration policy
-    - simulate the local environment with the sampled action
-  - store all data into replay buffer
-  - sample training data from replay buffer
-  - train the network for one mini-batch
+- Initialize the network variables;
+- Create N processes;
+- For each process:
+  - Initialize a local environment;
+- Initialize the replay buffer;
+- Loop until reaching maximum steps:
+  - For each process do the following **simultaneously**:
+    - Sample an action using exploration policy;
+    - Simulate the local environment with the sampled action;
+  - Store all data into the replay buffer;
+  - Sample training data from the replay buffer;
+  - Train the network for one mini-batch.
 
 ## Performance
 To save time, the agent is trained on the atari game "Pong" since this is a simple environment which can be easily solved by exploiting the weakness of the computer-controlled opponent.
