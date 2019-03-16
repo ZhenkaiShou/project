@@ -1,9 +1,9 @@
 # Simple implementation of Deep Q-Network
 ## Basics
 This repository implements the Deep Q-Network (DQN) algorithm with 3 different vairants: 
-- standard
-- asynchronous
-- parallel
+- [Standard](https://github.com/ZhenkaiShou/project/tree/master/stand%20alone%20implementation/DQN/Standard)
+- [Asynchronous](https://github.com/ZhenkaiShou/project/tree/master/stand%20alone%20implementation/DQN/Asynchronous)
+- [Parallel](https://github.com/ZhenkaiShou/project/tree/master/stand%20alone%20implementation/DQN/Parallel)
 ## Training Pipeline of Different Variants
 ### Standard
 - initialize network variables
