@@ -25,7 +25,7 @@ This repository implements the Deep Q-Network (DQN) algorithm with 3 different v
     - simulate the local environment with the sampled action
     - store data into replay buffer
     - sample training data from replay buffer
-    - compute the gradients of the local network based on the training data
+    - compute the gradients of the copied network based on the training data
     - apply the gradients to the global network
 ### Parallel
 - initialize the network variables
@@ -48,7 +48,7 @@ The learning curve w.r.t. the episodic reward during training is shown below. Fr
 <p float="center">
   <img src="/stand%20alone%20implementation/DQN/Standard/Figures/Training/dqn.png" width="30%"/>
   <img src="/stand%20alone%20implementation/DQN/Asynchronous/Figures/Training/async_dqn.png" width="30%"/>
-  <img src="/stand%20alone%20implementation/DQN/Parallel%20Environments/Figures/Training/par_dqn.png" width="30%"/>
+  <img src="/stand%20alone%20implementation/DQN/Parallel/Figures/Training/par_dqn.png" width="30%"/>
 </p>
 
 ### Training Time
