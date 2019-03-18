@@ -44,7 +44,7 @@ This repository implements the Deep Q-Network (DQN) algorithm with 3 different v
   - Train the network for one mini-batch.
 
 ## Performance
-To save time, the agent is trained on the atari game "Pong" since this is a simple environment which can be easily solved by exploiting the weakness of the computer-controlled opponent.
+The agent is trained to play the Atari game "Pong" since this is a simple environment which can be easily solved by exploiting the weakness of the computer-controlled opponent.
 ### Learning Curves
 The learning curve w.r.t. the episodic reward during training is shown below. From left to right: standard, asynchornous, parallel.
 
