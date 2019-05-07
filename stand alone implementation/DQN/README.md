@@ -65,6 +65,15 @@ The training time for each variant is shown below.
 | Asynchronous |   5523  |
 |   Parallel   |  12113  |
 
+## Extra: Attention Visualization
+Here shows the attention of the deep neural network when playing the game Pong:
+- Expectation: which part of the observation should be focused on.
+- Advantage: which part of the observation plays an important role in decision making.
+
+<p float="center">
+  <img src="/stand%20alone%20implementation/DQN/Standard/Figures/Visualization/attention.gif" width="50%"/>
+</p>
+
 ## Reference
 
 - [Deepmind DQN](https://deepmind.com/research/dqn/)
