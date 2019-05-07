@@ -21,9 +21,10 @@ class QValueNetwork(object):
       # shape(advantage) = (batch_size, num_action)
       adv = tf.layers.dense(h, units = 512, use_bias = True, activation = tf.nn.relu)
       adv = tf.layers.dense(h, units = self.action_space.n, use_bias = True)
+      adv = adv - tf.reduce_mean(adv, axis = 1, keepdims = True)
       # q(s, a) = exp(s) + adv(s, a)
       # shape(q) = (batch_size, num_action)
-      self.q = exp + adv - tf.reduce_mean(adv, axis = 1, keepdims = True)
+      self.q = exp + adv
     self.trainable_variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope = self.name)
     self.variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope = self.name)
     
@@ -41,6 +42,14 @@ class QValueNetwork(object):
     if auxiliary_network is not None:
       # Synchronize the network (self network <- auxiliary network).
       self.sync_op = [tf.assign(ref, value) for ref, value in zip(self.variables, auxiliary_network.variables)]
+    
+    # For visualization.
+    obs_gradients = tf.gradients(tf.reduce_max(self.q, axis = 1), self.Obs)[0]
+    self.obs_gradients = tf.reduce_mean(obs_gradients, axis = 3)
+    obs_gradients_exp = tf.gradients(exp, self.Obs)[0]
+    self.obs_gradients_exp = tf.reduce_mean(obs_gradients_exp, axis = 3)
+    obs_gradients_adv = tf.gradients(tf.reduce_max(adv, axis = 1), self.Obs)[0]
+    self.obs_gradients_adv = tf.reduce_mean(obs_gradients_adv, axis = 3)
 
 def encode(input):
   h = tf.layers.conv2d(input, filters = 32, kernel_size = (8, 8), strides = (4, 4), use_bias = True, activation = tf.nn.relu)
