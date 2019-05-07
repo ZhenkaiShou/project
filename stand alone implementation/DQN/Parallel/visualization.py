@@ -57,7 +57,7 @@ def visualize(file_name):
 
 def plot_obs(obs, scale = 0.01):
   # Plot the observation.
-  f, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (np.shape(obs)[0] * scale, np.shape(obs)[1] * scale))
+  f, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (np.shape(obs)[1] * scale, np.shape(obs)[0] * scale))
   ax.imshow(obs)
   ax.set_axis_off()
   
