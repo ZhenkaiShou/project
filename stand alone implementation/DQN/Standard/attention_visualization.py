@@ -86,7 +86,7 @@ def plot_attention(obs, gradients_exp, gradients_adv, scale = 0.01):
   attention_exp = cv2.resize(attention_exp, target_size, interpolation=cv2.INTER_AREA)
   attention_adv = cv2.resize(attention_adv, target_size, interpolation=cv2.INTER_AREA)
   
-  f, ax = plt.subplots(nrows = 1, ncols = 2, figsize = (2 * np.shape(obs)[0] * scale, 1.1 * np.shape(obs)[1] * scale))
+  f, ax = plt.subplots(nrows = 1, ncols = 2, figsize = (2 * np.shape(obs)[1] * scale, 1.1 * np.shape(obs)[0] * scale))
   # Plot the attention w.r.t. expectation.
   ax[0].imshow(obs)
   ax[0].imshow(attention_exp)
