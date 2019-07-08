@@ -1,9 +1,9 @@
 # Simple implementation of Deep Q-Network
 ## Basics
 This repository implements the Deep Q-Network (DQN) algorithm with 3 different vairants: 
-- [Standard](https://github.com/ZhenkaiShou/project/tree/master/stand%20alone%20implementation/DQN/Standard)
-- [Asynchronous](https://github.com/ZhenkaiShou/project/tree/master/stand%20alone%20implementation/DQN/Asynchronous)
-- [Parallel](https://github.com/ZhenkaiShou/project/tree/master/stand%20alone%20implementation/DQN/Parallel)
+- [Standard](https://github.com/ZhenkaiShou/project/tree/master/paper%20reproduction/DQN/Standard)
+- [Asynchronous](https://github.com/ZhenkaiShou/project/tree/master/paper%20reproduction/DQN/Asynchronous)
+- [Parallel](https://github.com/ZhenkaiShou/project/tree/master/paper%20reproduction/DQN/Parallel)
 ## Training Pipeline of Different Variants
 ### Standard
 - Initialize network variables;
@@ -49,9 +49,9 @@ The agent is trained to play the Atari game "Pong" since this is a simple enviro
 The learning curve w.r.t. the episodic reward during training is shown below. From left to right: standard, asynchornous, parallel.
 
 <p float="center">
-  <img src="/stand%20alone%20implementation/DQN/Standard/Figures/Training/dqn.png" width="30%"/>
-  <img src="/stand%20alone%20implementation/DQN/Asynchronous/Figures/Training/async_dqn.png" width="30%"/>
-  <img src="/stand%20alone%20implementation/DQN/Parallel/Figures/Training/par_dqn.png" width="30%"/>
+  <img src="/paper%20reproduction/DQN/Standard/Figures/Training/dqn.png" width="30%"/>
+  <img src="/paper%20reproduction/DQN/Asynchronous/Figures/Training/async_dqn.png" width="30%"/>
+  <img src="/paper%20reproduction/DQN/Parallel/Figures/Training/par_dqn.png" width="30%"/>
 </p>
 
 ### Training Time
@@ -71,7 +71,7 @@ Here shows the attention of the deep neural network when playing the game Pong:
 - Advantage: which part of the observation plays an important role in decision making.
 
 <p float="center">
-  <img src="/stand%20alone%20implementation/DQN/Standard/Figures/Visualization/attention.gif" width="50%"/>
+  <img src="/paper%20reproduction/DQN/Standard/Figures/Visualization/attention.gif" width="50%"/>
 </p>
 
 ## Reference
