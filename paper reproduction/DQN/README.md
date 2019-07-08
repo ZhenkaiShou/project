@@ -1,4 +1,4 @@
-# Simple implementation of Deep Q-Network
+# Implementation of Deep Q-Network
 ## Basics
 This repository implements the Deep Q-Network (DQN) algorithm with 3 different vairants: 
 - [Standard](https://github.com/ZhenkaiShou/project/tree/master/paper%20reproduction/DQN/Standard)
