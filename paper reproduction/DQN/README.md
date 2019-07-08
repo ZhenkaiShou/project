@@ -6,9 +6,9 @@ This repository implements the Deep Q-Network (DQN) algorithm with 3 different v
 - [Parallel](https://github.com/ZhenkaiShou/project/tree/master/paper%20reproduction/DQN/Parallel)
 
 ## Dependencies
-tensorflow
-gym
-atari-py
+- tensorflow
+- gym
+- atari-py
 
 ## Training Pipeline of Different Variants
 ### Standard
