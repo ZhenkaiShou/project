@@ -4,6 +4,12 @@ This repository implements the Deep Q-Network (DQN) algorithm with 3 different v
 - [Standard](https://github.com/ZhenkaiShou/project/tree/master/paper%20reproduction/DQN/Standard)
 - [Asynchronous](https://github.com/ZhenkaiShou/project/tree/master/paper%20reproduction/DQN/Asynchronous)
 - [Parallel](https://github.com/ZhenkaiShou/project/tree/master/paper%20reproduction/DQN/Parallel)
+
+## Dependencies
+tensorflow
+gym
+atari-py
+
 ## Training Pipeline of Different Variants
 ### Standard
 - Initialize network variables;
